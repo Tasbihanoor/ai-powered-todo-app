@@ -22,7 +22,7 @@ interface AIResponse {
   message: string;
   action?: {
     type: 'create' | 'update' | 'delete' | 'list' | 'other';
-    data?: any;
+    data?: never;
   };
   todo?: Todo;
   todos?: Todo[];
@@ -164,7 +164,7 @@ export default function AITodoChat() {
                     <Bot className="w-12 h-12 mx-auto mb-2 text-blue-500" />
                     <p>Ask me to help with your todos!</p>
                     <p className="text-sm mt-2">
-                      Try: "Create a high priority task to finish the report by Friday"
+                      Try: &quot;Create a high priority task to finish the report by Friday&quot;
                     </p>
                   </div>
                 ) : (
@@ -213,7 +213,7 @@ export default function AITodoChat() {
                     className="flex-1"
                     disabled={isLoading}
                   />
-                  <Button type="submit" disabled={isLoading} size="icon">
+                  <Button type="submit" disabled={isLoading} >
                     {isLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
