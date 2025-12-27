@@ -16,7 +16,7 @@ export const auth = betterAuth({
         enabled: true
     },
     trustedOrigins: [
-        "https://ai-focus-todo.vercel.app",
+        "https://ai-powered-todo-app-sandy.vercel.app",
         "http://localhost:3000"
     ],
     // Add other providers or plugins here as needed
