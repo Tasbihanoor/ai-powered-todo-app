@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Check, Zap, Shield, Star, Users, ArrowRight, Target, Brain } from "lucide-react";
+import { Check, Zap, Shield, Star, Users, ArrowRight, Target, Brain, Github } from "lucide-react";
 
 export default function Home() {
     return (
@@ -26,15 +26,6 @@ export default function Home() {
                         <span className="text-xl font-bold text-white">TaskFlow</span>
                     </div>
                     <div className="hidden md:flex items-center gap-6">
-                        <Link href="/features" className="text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer">
-                            Features
-                        </Link>
-                        <Link href="/pricing" className="text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer">
-                            Pricing
-                        </Link>
-                        <Link href="/about" className="text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer">
-                            About
-                        </Link>
                         <Link href="/login" className="text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer">
                             Sign In
                         </Link>
@@ -224,62 +215,26 @@ export default function Home() {
             </main>
 
             {/* Footer */}
-            <footer className="border-t border-gray-800 bg-black/80 backdrop-blur-lg mt-20">
-                <div className="container mx-auto px-6 py-12">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-lg bg-linear-to-br from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                                    <Target className="h-6 w-6 text-white" />
-                                </div>
-                                <span className="text-xl font-bold text-white">TaskFlow</span>
-                            </div>
-                            <p className="text-gray-400 text-sm">
-                                The ultimate productivity platform for modern professionals.
-                            </p>
+            <footer className="w-full border-t border-gray-800 bg-black px-6 py-4">
+                <div className="mx-auto flex max-w-7xl items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-emerald-500 to-cyan-500">
+                            <Target className="h-5 w-5 text-white" />
                         </div>
-
-                        <div>
-                            <h3 className="text-lg font-semibold text-white mb-4">Product</h3>
-                            <ul className="space-y-2">
-                                <li><Link href="/features" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Features</Link></li>
-                                <li><Link href="/pricing" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Pricing</Link></li>
-                                <li><Link href="/integrations" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Integrations</Link></li>
-                                <li><Link href="/roadmap" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Roadmap</Link></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 className="text-lg font-semibold text-white mb-4">Company</h3>
-                            <ul className="space-y-2">
-                                <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">About</Link></li>
-                                <li><Link href="/blog" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Blog</Link></li>
-                                <li><Link href="/careers" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Careers</Link></li>
-                                <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Contact</Link></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 className="text-lg font-semibold text-white mb-4">Support</h3>
-                            <ul className="space-y-2">
-                                <li><Link href="/help" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Help Center</Link></li>
-                                <li><Link href="/docs" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Documentation</Link></li>
-                                <li><Link href="/community" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Community</Link></li>
-                                <li><Link href="/status" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Status</Link></li>
-                            </ul>
-                        </div>
+                        <span className="text-sm font-semibold text-white">
+                            TaskFlow
+                        </span>
                     </div>
-
-                    <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-gray-400 text-sm">
-                            © 2025 TaskFlow. All rights reserved.
-                        </p>
-                        <div className="flex items-center gap-6">
-                            <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Privacy</Link>
-                            <Link href="/terms" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Terms</Link>
-                            <Link href="/cookies" className="text-gray-400 hover:text-white transition-colors cursor-pointer text-sm">Cookies</Link>
-                        </div>
-                    </div>
+                    <Link
+                        href="https://github.com/Tasbihanoor/ai-powered-todo-app"
+                        target="_blank">
+                    <Button
+                        variant="outline"
+                        className="flex items-center gap-2 border-gray-700 text-white hover:bg-gray-800">
+                        <Github className="h-4 w-4" />
+                        GitHub
+                    </Button>
+                    </Link>
                 </div>
             </footer>
         </div>
