@@ -6,6 +6,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, CheckCircle, Clock, ListTodo } from "lucide-react";
+import AITodoChat from "@/components/todo/ai-todo-chat";
 
 export default async function DashboardPage() {
     const session = await auth.api.getSession({
@@ -90,6 +91,9 @@ export default async function DashboardPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* AI Todo Chat */}
+                <AITodoChat />
             </div>
         </div>
     );
