@@ -16,9 +16,19 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true
     },
+    socialProviders: {},
     trustedOrigins: [
+        "https://ai-powered-todo-app-sandy.vercel.app/",
         "https://ai-powered-todo-app-sandy.vercel.app",
         "http://localhost:3000"
     ],
+    cookies: {
+        domain: process.env.NODE_ENV === 'production'
+            ? 'ai-powered-todo-app-sandy.vercel.app'
+            : undefined,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+    },
     // Add other providers or plugins here as needed
 });
