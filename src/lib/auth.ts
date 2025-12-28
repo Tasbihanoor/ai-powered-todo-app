@@ -5,7 +5,7 @@ import { db } from '../db';
 import * as schema from '../db/schema';
 
 export const auth = betterAuth({
-    baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    baseURL: process.env.BETTER_AUTH_URL || "https://ai-powered-todo-app-sandy.vercel.app",
     adapter: drizzleAdapter(db, {
         provider: "pg",
         schema: {
@@ -18,9 +18,7 @@ export const auth = betterAuth({
     },
     socialProviders: {},
     trustedOrigins: [
-        "https://ai-powered-todo-app-sandy.vercel.app/",
-        "https://ai-powered-todo-app-sandy.vercel.app",
-        "http://localhost:3000"
+        "https://ai-powered-todo-app-sandy.vercel.app"
     ],
     cookies: {
         domain: process.env.NODE_ENV === 'production'
