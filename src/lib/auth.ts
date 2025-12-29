@@ -20,14 +20,14 @@ export const auth = betterAuth({
     },
     socialProviders: {},
     trustedOrigins: [
-        "https://ai-powered-todo-app-sandy.vercel.app",
         "http://localhost:3000",
         "http://localhost:3001",
-        "http://localhost:3002"
+        "http://localhost:3002",
+        "https://ai-powered-todo-app-sandy.vercel.app"
     ],
     cookies: {
         domain: process.env.NODE_ENV === 'production'
-            ? undefined // Remove explicit domain to allow default behavior
+            ? '.vercel.app' // Set domain for Vercel deployment
             : undefined,
         path: '/',
         secure: process.env.NODE_ENV === 'production',
