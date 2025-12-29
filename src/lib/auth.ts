@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { randomUUID } from 'crypto';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key';
 
@@ -77,7 +78,9 @@ export async function getUserById(id: string) {
 
 export async function createUser(name: string, email: string, password: string) {
   const hashedPassword = await hashPassword(password);
+  const userId = randomUUID();
   const [newUser] = await db.insert(users).values({
+    id: userId,
     name,
     email,
     password: hashedPassword,

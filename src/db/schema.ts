@@ -1,7 +1,7 @@
 import { pgTable, text, boolean, timestamp, uuid, index } from 'drizzle-orm/pg-core';
 
 export const users = pgTable("users", {
-    id: text("id").primaryKey().defaultRandom(),
+    id: text("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull().unique(),
     password: text("password").notNull(), // Add password field for simple auth
