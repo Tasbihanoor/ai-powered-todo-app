@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
       "bcryptjs",
       "jsonwebtoken"
     ],
-    outputFileTracing: true,
   },
   output: 'standalone',
 };
