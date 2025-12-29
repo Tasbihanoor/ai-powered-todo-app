@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LogOut, User as UserIcon, Menu, X } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -17,8 +16,22 @@ export function DashboardHeader({ userName, userEmail, userImage }: DashboardHea
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleLogout = async () => {
-        await authClient.signOut();
-        window.location.href = "/login";
+        try {
+            // Call the logout API endpoint
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                window.location.href = "/login";
+            } else {
+                // If logout API fails, still redirect to login
+                window.location.href = "/login";
+            }
+        } catch (error) {
+            // If there's an error, still redirect to login
+            window.location.href = "/login";
+        }
     };
 
     return (

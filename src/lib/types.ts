@@ -2,8 +2,8 @@ import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import * as schema from '@/db/schema';
 
 // User Types
-export type User = InferSelectModel<typeof schema.user>;
-export type NewUser = InferInsertModel<typeof schema.user>;
+export type User = InferSelectModel<typeof schema.users>;
+export type NewUser = InferInsertModel<typeof schema.users>;
 
 // Todo Types
 export type Todo = InferSelectModel<typeof schema.todos>;
