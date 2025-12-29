@@ -1,52 +1,45 @@
 "use server";
 
 import { db } from "@/db";
-import { todos, user } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { todos, users } from "@/db/schema";
+import { getUserFromToken } from "@/lib/auth";
 import { createTodoSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { and, eq, desc } from "drizzle-orm";
 
 export async function getTodos() {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const user = await getUserFromToken();
 
-    if (!session?.user) {
+    if (!user) {
         throw new Error("Unauthorized");
     }
 
     return db
         .select()
         .from(todos)
-        .where(eq(todos.userId, session.user.id))
+        .where(eq(todos.userId, user.id))
         .orderBy(desc(todos.createdAt));
 }
 
 export async function createTodo(formData: FormData) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const user = await getUserFromToken();
 
-    if (!session?.user) {
+    if (!user) {
         throw new Error("Unauthorized");
     }
 
-    const userId = session.user.id;
+    const userId = user.id;
     const existingUser = await db
-        .select({ id: user.id })
-        .from(user)
-        .where(eq(user.id, userId))
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.id, userId))
         .limit(1);
 
     if (existingUser.length === 0) {
-        await db.insert(user).values({
-            id: session.user.id,
-            name: session.user.name,
-            email: session.user.email,
-            emailVerified: session.user.emailVerified ?? false,
-            image: session.user.image ?? null,
+        await db.insert(users).values({
+            id: user.id,
+            name: user.name,
+            email: user.email,
             createdAt: new Date(),
             updatedAt: new Date(),
         });
@@ -79,11 +72,9 @@ export async function createTodo(formData: FormData) {
 }
 
 export async function toggleTodo(id: string, isCompleted: boolean) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const user = await getUserFromToken();
 
-    if (!session?.user) {
+    if (!user) {
         throw new Error("Unauthorized");
     }
 
@@ -93,7 +84,7 @@ export async function toggleTodo(id: string, isCompleted: boolean) {
         .where(
             and(
                 eq(todos.id, id),
-                eq(todos.userId, session.user.id)
+                eq(todos.userId, user.id)
             )
         );
 
@@ -101,11 +92,9 @@ export async function toggleTodo(id: string, isCompleted: boolean) {
 }
 
 export async function deleteTodo(id: string) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const user = await getUserFromToken();
 
-    if (!session?.user) {
+    if (!user) {
         throw new Error("Unauthorized");
     }
 
@@ -114,7 +103,7 @@ export async function deleteTodo(id: string) {
         .where(
             and(
                 eq(todos.id, id),
-                eq(todos.userId, session.user.id)
+                eq(todos.userId, user.id)
             )
         );
 

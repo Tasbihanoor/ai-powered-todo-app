@@ -1,21 +1,21 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { loginSchema } from "@/lib/validations/auth";
 import { AlertCircle, Mail, Lock, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    // const router = useRouter();
 
     const handleLogin = async () => {
         setError(null);
@@ -29,18 +29,30 @@ export default function LoginPage() {
             return;
         }
 
-        await authClient.signIn.email({
-            email,
-            password,
-        }, {
-            onSuccess: () => {
-                window.location.href = "/dashboard";
-            },
-            onError: (ctx: { error: { message: string } }) => {
-                setError(ctx.error.message);
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.error || 'Login failed');
                 setLoading(false);
-            },
-        });
+                return;
+            }
+
+            // Redirect to dashboard on successful login
+            router.push('/dashboard');
+            router.refresh(); // Refresh to update the UI based on new auth state
+        } catch (err) {
+            setError('An error occurred during login');
+            setLoading(false);
+        }
     };
 
     return (

@@ -1,6 +1,5 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,22 +30,30 @@ export default function SignupPage() {
             return;
         }
 
-        await authClient.signUp.email({
-            email,
-            password,
-            name,
-        }, {
-            onSuccess: async () => {
-                // After successful signup, redirect to dashboard
-                // Better-Auth automatically signs in the user after successful signup
+        try {
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.error || 'Signup failed');
                 setLoading(false);
-                router.push('/dashboard');
-            },
-            onError: (ctx: { error: { message: string } }) => {
-                setError(ctx.error.message);
-                setLoading(false);
-            },
-        });
+                return;
+            }
+
+            // Redirect to dashboard on successful signup
+            router.push('/dashboard');
+            router.refresh(); // Refresh to update the UI based on new auth state
+        } catch (err) {
+            setError('An error occurred during signup');
+            setLoading(false);
+        }
     };
 
 

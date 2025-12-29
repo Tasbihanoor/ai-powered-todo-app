@@ -1,37 +1,87 @@
+import { compare, hash } from 'bcryptjs';
+import { sign, verify } from 'jsonwebtoken';
+import { cookies } from 'next/headers';
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from '../db';
-import * as schema from '../db/schema';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key';
 
-export const auth = betterAuth({
-    secret: process.env.BETTER_AUTH_SECRET || "very-long-secret-key-at-least-32-characters-for-production",
-    baseURL: process.env.BETTER_AUTH_URL || "https://ai-powered-todo-app-sandy.vercel.app",
-    adapter: drizzleAdapter(db, {
-        provider: "pg",
-        schema: {
-            ...schema,
-            user: schema.user
-        }
-    }),
-    emailAndPassword: {
-        enabled: true,
-        requireEmailVerification: false, // Set to true if you want email verification
-    },
-    socialProviders: {},
-    trustedOrigins: [
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://localhost:3002",
-        "https://ai-powered-todo-app-sandy.vercel.app"
-    ],
-    cookies: {
-        domain: process.env.NODE_ENV === 'production'
-            ? '.vercel.app' // Set domain for Vercel deployment
-            : undefined,
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    },
-    // Add other providers or plugins here as needed
-});
+export interface UserPayload {
+  id: string;
+  email: string;
+  name: string;
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  return await hash(password, 12);
+}
+
+export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+  return await compare(password, hashedPassword);
+}
+
+export function generateToken(payload: UserPayload): string {
+  return sign(payload, JWT_SECRET, { expiresIn: '7d' });
+}
+
+export function verifyToken(token: string): UserPayload | null {
+  try {
+    return verify(token, JWT_SECRET) as UserPayload;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function setAuthCookie(token: string): Promise<void> {
+  (await cookies()).set('auth_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+    path: '/',
+    sameSite: 'strict',
+  });
+}
+
+export async function getAuthCookie(): Promise<string | undefined> {
+  return (await cookies()).get('auth_token')?.value;
+}
+
+export async function removeAuthCookie(): Promise<void> {
+  (await cookies()).delete('auth_token');
+}
+
+export async function getUserFromToken(): Promise<UserPayload | null> {
+  const token = await getAuthCookie();
+  if (!token) {
+    return null;
+  }
+
+  const payload = verifyToken(token);
+  if (!payload) {
+    return null;
+  }
+
+  return payload;
+}
+
+export async function getUserByEmail(email: string) {
+  const user = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return user[0] || null;
+}
+
+export async function getUserById(id: string) {
+  const user = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return user[0] || null;
+}
+
+export async function createUser(name: string, email: string, password: string) {
+  const hashedPassword = await hashPassword(password);
+  const [newUser] = await db.insert(users).values({
+    name,
+    email,
+    password: hashedPassword,
+  }).returning();
+
+  return { id: newUser.id, email: newUser.email, name: newUser.name };
+}

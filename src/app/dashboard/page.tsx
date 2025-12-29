@@ -1,5 +1,4 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getUserFromToken } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { TodoList } from "@/components/todo/todo-list";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
@@ -9,11 +8,9 @@ import { Calendar, CheckCircle, Clock, ListTodo } from "lucide-react";
 import AITodoChat from "@/components/todo/ai-todo-chat";
 
 export default async function DashboardPage() {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const user = await getUserFromToken();
 
-    if (!session) {
+    if (!user) {
         redirect("/login");
     }
 
@@ -29,9 +26,9 @@ export default async function DashboardPage() {
 
             <div className="relative z-10">
                 <DashboardHeader
-                    userName={session.user.name}
-                    userEmail={session.user.email}
-                    userImage={session.user.image}
+                    userName={user.name}
+                    userEmail={user.email}
+                    userImage={null} {/* No image in simple auth system */}
                 />
 
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
