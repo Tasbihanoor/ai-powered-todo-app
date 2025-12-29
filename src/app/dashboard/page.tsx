@@ -28,7 +28,7 @@ export default async function DashboardPage() {
                 <DashboardHeader
                     userName={user.name}
                     userEmail={user.email}
-                    userImage={null} {/* No image in simple auth system */}
+                    userImage={null}
                 />
 
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
