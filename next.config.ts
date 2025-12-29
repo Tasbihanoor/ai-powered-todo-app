@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: [
+      "bcryptjs",
+      "jsonwebtoken"
+    ],
+    outputFileTracing: true,
+  },
+  output: 'standalone',
 };
 
 export default nextConfig;
