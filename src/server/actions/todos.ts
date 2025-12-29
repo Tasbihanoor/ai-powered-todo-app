@@ -29,21 +29,6 @@ export async function createTodo(formData: FormData) {
     }
 
     const userId = user.id;
-    const existingUser = await db
-        .select({ id: users.id })
-        .from(users)
-        .where(eq(users.id, userId))
-        .limit(1);
-
-    if (existingUser.length === 0) {
-        await db.insert(users).values({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        });
-    }
 
     const rawData = {
         content: String(formData.get("content") ?? ""),
