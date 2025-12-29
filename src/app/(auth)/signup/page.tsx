@@ -6,17 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { signupSchema } from "@/lib/validations/auth";
-import { AlertCircle, User, Mail, Lock, CheckCircle, ArrowRight, Target } from "lucide-react";
+import { AlertCircle, User, Mail, Lock, ArrowRight, Target } from "lucide-react";
 
 export default function SignupPage() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
 
     const handleSignup = async () => {
         setError(null);
@@ -36,10 +37,10 @@ export default function SignupPage() {
             name,
         }, {
             onSuccess: async () => {
-                // After successful signup, we can redirect to login or dashboard
+                // After successful signup, redirect to dashboard
                 // Better-Auth automatically signs in the user after successful signup
-                setSuccess(true);
                 setLoading(false);
+                router.push('/dashboard');
             },
             onError: (ctx: { error: { message: string } }) => {
                 setError(ctx.error.message);
@@ -48,44 +49,6 @@ export default function SignupPage() {
         });
     };
 
-    if (success) {
-        return (
-            <div className="relative min-h-screen w-full bg-linear-to-br from-gray-900 via-slate-900 to-black flex items-center justify-center p-4">
-                {/* Animated Background Elements */}
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-gray-900/50 via-transparent to-transparent"></div>
-                    <div className="absolute -top-40 -left-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute top-1/3 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                    <div className="absolute bottom-0 left-1/2 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-                </div>
-
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6 }}
-                    className="w-full max-w-md"
-                >
-                    <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700 rounded-2xl p-8 shadow-2xl shadow-emerald-500/10 text-center">
-                        <div className="mx-auto w-16 h-16 rounded-xl bg-linear-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20">
-                            <CheckCircle className="h-8 w-8 text-white" />
-                        </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">
-                            Account Created!
-                        </h2>
-                        <p className="text-gray-400 mb-6">
-                            Your account has been successfully created. You are now logged in.
-                        </p>
-                        <Link href="/dashboard">
-                            <Button className="w-full h-12 text-base font-semibold bg-linear-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 shadow-lg shadow-emerald-500/20">
-                                Go to Dashboard
-                                <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
-        );
-    }
 
     return (
         <div className="relative min-h-screen w-full bg-linear-to-br from-gray-900 via-slate-900 to-black flex items-center justify-center p-4">
